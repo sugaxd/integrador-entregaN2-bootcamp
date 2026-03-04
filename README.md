@@ -14,7 +14,7 @@ Tienda online de instrumentos musicales desarrollada con React. Permite explorar
 
 ```bash
 # Clonar el repositorio
-git clone https://github.com/tu-usuario/el-bordo.git
+git clone https://github.com/sugaxd/integrador-entregaN2-bootcamp
 
 # Ingresar al directorio
 cd el-bordo
