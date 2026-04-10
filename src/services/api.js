@@ -1,77 +1,88 @@
-const BASE_URL = 'https://69949106fade7a9ec0f5c1ca.mockapi.io/elbordo/api';
+const BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
-// pruductos
+// helpers
+const authHeaders = (token) => ({
+  'Content-Type': 'application/json',
+  Authorization: `Bearer ${token}`,
+});
+
+const handleRes = async (res) => {
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({ message: res.statusText }));
+    throw new Error(err.message || 'Error en la petición');
+  }
+  return res.json();
+};
+
+// auth
+export const loginUsuario = (email, password) =>
+  fetch(`${BASE_URL}/users/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ email, password }),
+  }).then(handleRes);
+
+// products 
 export const getProductos = () =>
-  fetch(`${BASE_URL}/products`).then(res => {
-    if (!res.ok) throw new Error('Error al obtener productos');
-    return res.json();
-  });
+  fetch(`${BASE_URL}/products`).then(handleRes);
 
 export const getProductoById = (id) =>
-  fetch(`${BASE_URL}/products/${id}`).then(res => {
-    if (!res.ok) throw new Error('Producto no encontrado');
-    return res.json();
-  });
+  fetch(`${BASE_URL}/products/${id}`).then(handleRes);
 
-export const createProducto = (data) =>
+export const createProducto = (formData, token) =>
   fetch(`${BASE_URL}/products`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ...data, createdAt: new Date().toISOString() }),
-  }).then(res => {
-    if (!res.ok) throw new Error('Error al crear producto');
-    return res.json();
-  });
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData, // FormData para subir imagen
+  }).then(handleRes);
 
-export const updateProducto = (id, data) =>
+export const updateProducto = (id, formData, token) =>
   fetch(`${BASE_URL}/products/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  }).then(res => {
-    if (!res.ok) throw new Error('Error al actualizar producto');
-    return res.json();
-  });
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  }).then(handleRes);
 
-export const deleteProducto = (id) =>
+export const deleteProducto = (id, token) =>
   fetch(`${BASE_URL}/products/${id}`, {
     method: 'DELETE',
-  }).then(res => {
-    if (!res.ok) throw new Error('Error al eliminar producto');
-    return res.json();
-  });
+    headers: authHeaders(token),
+  }).then(handleRes);
 
-// ussers
-export const getUsuarios = () =>
-  fetch(`${BASE_URL}/user`).then(res => {
-    if (!res.ok) throw new Error('Error al obtener usuarios');
-    return res.json();
-  });
+//  ussers 
+export const getUsuarios = (token) =>
+  fetch(`${BASE_URL}/users`, {
+    headers: authHeaders(token),
+  }).then(handleRes);
 
-export const createUsuario = (data) =>
-  fetch(`${BASE_URL}/user`, {
+export const createUsuario = (formData) =>
+  fetch(`${BASE_URL}/users`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  }).then(res => {
-    if (!res.ok) throw new Error('Error al crear usuario');
-    return res.json();
-  });
+    body: formData,
+  }).then(handleRes);
 
-export const updateUsuario = (id, data) =>
-  fetch(`${BASE_URL}/user/${id}`, {
+export const updateUsuario = (id, formData, token) =>
+  fetch(`${BASE_URL}/users/${id}`, {
     method: 'PUT',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(data),
-  }).then(res => {
-    if (!res.ok) throw new Error('Error al actualizar usuario');
-    return res.json();
-  });
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData,
+  }).then(handleRes);
 
-export const deleteUsuario = (id) =>
-  fetch(`${BASE_URL}/user/${id}`, {
+export const deleteUsuario = (id, token) =>
+  fetch(`${BASE_URL}/users/${id}`, {
     method: 'DELETE',
-  }).then(res => {
-    if (!res.ok) throw new Error('Error al eliminar usuario');
-    return res.json();
-  });
+    headers: authHeaders(token),
+  }).then(handleRes);
+
+// ordenes 
+export const createOrder = (orderData, token) =>
+  fetch(`${BASE_URL}/orders`, {
+    method: 'POST',
+    headers: authHeaders(token),
+    body: JSON.stringify(orderData),
+  }).then(handleRes);
+
+export const getOrders = (token) =>
+  fetch(`${BASE_URL}/orders`, {
+    headers: authHeaders(token),
+  }).then(handleRes);

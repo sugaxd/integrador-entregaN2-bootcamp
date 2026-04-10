@@ -63,6 +63,50 @@ body {
   color: #007bff;
 }
 
+/* Modo admin — links blancos con hover/active celeste */
+.navbar-admin .navbar-list a {
+  color: #ffffff;
+}
+.navbar-admin .navbar-list a:hover,
+.navbar-admin .navbar-list a.active {
+  color: #61dafb;
+}
+.navbar-admin .navbar-list button {
+  color: #ffffff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+.navbar-admin .navbar-list button:hover {
+  color: #61dafb;
+  background: none;
+}
+
+/* Modo cliente — links oscuros con hover/active azul */
+.navbar-cliente .navbar-list a {
+  color: #1a1a2e;
+}
+.navbar-cliente .navbar-list a:hover,
+.navbar-cliente .navbar-list a.active {
+  color: #007bff;
+}
+.navbar-cliente .navbar-list button {
+  color: #1a1a2e;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.95rem;
+  padding: 0;
+  transition: color 0.2s;
+}
+.navbar-cliente .navbar-list button:hover {
+  color: #007bff;
+  background: none;
+}
+
 .icons-container {
   display: flex;
   gap: 1rem;
@@ -790,7 +834,7 @@ body {
   margin-top: 1rem;
 }
 
-/* loading / spinner */
+/* loading,spinner */
 .loading {
   text-align: center;
   padding: 3rem;
@@ -836,4 +880,67 @@ body {
     font-weight: bold;
     margin-right: 10px;
   }
+}
+
+/*  Carrito badge  */
+.cart-badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: #e63946;
+  color: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  font-size: 0.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* Botones de auth en navbar */
+.btn-logout {
+  background: transparent;
+  border: 1px solid #e63946;
+  color: #e63946;
+  padding: 4px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+.btn-logout:hover {
+  background: #e63946;
+  color: #fff;
+}
+.btn-login {
+  background: transparent;
+  border: 1px solid #ccc;
+  color: #ccc;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+.btn-login:hover {
+  background: #fff;
+  color: #111;
+}
+
+/* Alertas  */
+.alert-success {
+  background: #2d6a4f;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+}
+.alert-error {
+  background: #c1121f;
+  color: #fff;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
 }

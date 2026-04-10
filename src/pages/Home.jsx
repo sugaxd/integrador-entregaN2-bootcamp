@@ -6,6 +6,8 @@ import elbordoImg from '../assets/elbordo.png';
 const BANNER_URL =
   'https://www.malaga8.com/modules/dbblog/views/img/post/Resumen%202022%20-%20Tienda%20de%20instrumentos%20musicales%20en%20madrid.jpg';
 
+const LIMITE_HOME = 10;
+
 function Home() {
   const [productos, setProductos] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,15 +15,15 @@ function Home() {
 
   useEffect(() => {
     getProductos()
-      .then(data => {
-        setProductos(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setError(err.message);
-        setLoading(false);
-      });
+      .then(data => { setProductos(data); setLoading(false); })
+      .catch(err => { setError(err.message); setLoading(false); });
   }, []);
+
+  const nuevos = productos.filter(p => p.destacado === 'nuevo');
+  const ofertas = productos.filter(p => p.destacado === 'oferta');
+  const generales = productos
+    .filter(p => !p.destacado || p.destacado === 'ninguno')
+    .slice(0, LIMITE_HOME);
 
   return (
     <div>
@@ -48,30 +50,62 @@ function Home() {
         </div>
       </div>
 
-      {/* Productos */}
-      <div id="productos">
-        <h2 className="texts-productos">PRODUCTOS</h2>
-        <div className="separador"></div>
+      {loading && <p className="loading">Cargando productos...</p>}
+      {error && <p className="loading" style={{ color: '#dc3545' }}>Error al cargar productos: {error}</p>}
 
-        {loading && <p className="loading">Cargando productos...</p>}
-        {error && (
-          <p className="loading" style={{ color: '#dc3545' }}>
-            Error al cargar productos: {error}. <br />
-            <small>Asegúrate de configurar la URL de MockAPI en src/services/api.js</small>
-          </p>
-        )}
-
-        <div className="card-container">
-          {!loading && !error && productos.map(producto => (
-            <ProductCard key={producto.id} producto={producto} />
-          ))}
-          {!loading && !error && productos.length === 0 && (
-            <p className="loading">No hay productos disponibles. Agrega algunos desde el Admin.</p>
+      {!loading && !error && (
+        <>
+          {/* Sección Nuevos Ingresos */}
+          {nuevos.length > 0 && (
+            <div id="nuevos">
+              <h2 className="texts-productos"> NUEVOS INGRESOS</h2>
+              <div className="separador"></div>
+              <div className="card-container">
+                {nuevos.map(producto => (
+                  <ProductCard key={producto._id} producto={producto} badge="nuevo" />
+                ))}
+              </div>
+            </div>
           )}
-        </div>
-      </div>
 
-      <a href="#inicio" className="inicio-pag">⬆️ Inicio de Página</a>
+          {/* Sección Ofertas */}
+          {ofertas.length > 0 && (
+            <div id="ofertas">
+              <h2 className="texts-productos"> OFERTAS CALIENTITAS</h2>
+              <div className="separador"></div>
+              <div className="card-container">
+                {ofertas.map(producto => (
+                  <ProductCard key={producto._id} producto={producto} badge="oferta" />
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Sección Productos generales */}
+          <div id="productos">
+            <h2 className="texts-productos">PRODUCTOS</h2>
+            <div className="separador"></div>
+            <div className="card-container">
+              {generales.map(producto => (
+                <ProductCard key={producto._id} producto={producto} />
+              ))}
+              {generales.length === 0 && nuevos.length === 0 && ofertas.length === 0 && (
+                <p className="loading">No hay productos disponibles. Agrega algunos desde el Admin.</p>
+              )}
+            </div>
+
+            {productos.filter(p => !p.destacado || p.destacado === 'ninguno').length > LIMITE_HOME && (
+              <div style={{ textAlign: 'center', margin: '2rem 0' }}>
+                <a href="/productos" className="btn btn-primary">
+                  Ver todos los productos
+                </a>
+              </div>
+            )}
+          </div>
+        </>
+      )}
+
+
     </div>
   );
 }
